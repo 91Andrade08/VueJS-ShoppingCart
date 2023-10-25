@@ -2,10 +2,15 @@
 import { ref } from 'vue';
 const header = ref('App Lista de compras');
 const items = ref([
- // {id: 1, label: '10 bolillos'},
- // {id: 2, label: '1 lata de frijoles'},
-  //{id: 3, label: '2 lata de atún'}
+  {id: 1, label: '10 bolillos', purchased:true, highPriority:false},
+  {id: 2, label: '1 lata de frijoles',purchased:false,highPriority:true},
+  {id: 3, label: '2 lata de atún',purchased:true,highPriority:true}
 ]);
+//Funcion que alterna el estado de comprado de un item
+const togglePurchased = (item) =>{
+//invertir la propiedad "purchased"
+item.purchased =!item.purchased;
+}
 //Agregando metodo para guardar nuevo articulo en la lista 
 const saveItem=() => {
   items.value.push({id: items.value.length + 1, label: newItem.value})
@@ -49,7 +54,11 @@ const doEdit=(edit) =>{
     <button class="btn btn-primary" :disabled="newItem === ''">Salvar Artículo</button>
 </form>
   <ul>
-    <li v-for="{ id, label } in items" v-bind:key="id">
+    <li v-for="({ id, label, purchased, highPriority }, index) in items"
+    v-bind:key="id"
+    :class="{strikeout : purchased, priority : highPriority }"
+    @click="togglePurchased(items[index])"
+    >
       🔹 {{ label }}
     </li>
   </ul>

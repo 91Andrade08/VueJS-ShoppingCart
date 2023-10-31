@@ -1,5 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+// import { ref } from 'vue';
+// importamos funcion computed
+import { ref, computed } from "vue";
 const header = ref('App Lista de compras');
 const items = ref([
   {id: 1, label: '10 bolillos', purchased:true, highPriority:false},
@@ -26,6 +28,13 @@ const doEdit=(edit) =>{
   //Limpio el input de texto
   newItem.value="";
 };
+// Creando una propiedad computada
+const characterCount = computed(()=>{
+  // Toda propiedad computada debe regresar un valor
+  return newItem.value.length;
+  
+});
+
 </script>
 
 <template>
@@ -39,6 +48,7 @@ const doEdit=(edit) =>{
   <!-- <a v-bind:href="newItem">
     <i class="material-icons shopping-cart-icon">link</i>
   </a> -->
+  
   <form v-if="editing" v-on:submit.prevent= "saveItem" class="add-item form">
     <!-- Input de Nuevo Articulo -->
     <input  v-model.trim="newItem" type="text" placeholder="Ingresar nuevo articulo">
@@ -54,16 +64,23 @@ const doEdit=(edit) =>{
     <button class="btn btn-primary" :disabled="newItem === ''">Salvar Artículo</button>
 </form>
   <ul>
+        	<!-- Contador -->
+  <p class="counter">
+    {{ characterCount }} / 200
+  </p>
     <li v-for="({ id, label, purchased, highPriority }, index) in items"
     v-bind:key="id"
     :class="{strikeout : purchased, priority : highPriority }"
     @click="togglePurchased(items[index])"
     >
       🔹 {{ label }}
+  
     </li>
   </ul>
   <p v-if="items.length === 0">🥀 Lista de compras vacia 🥀</p>
   <p v-else>🔥Ingrese más Items🔥</p>
+
+  
 </template>
 
 <style scoped>
